@@ -1,0 +1,33 @@
+{
+  "name": "purescript-elasticsearch",
+  "homepage": "https://github.com/ConnorDillon/purescript-elasticsearch",
+  "authors": [
+    "Connor Dillon <connor@cdillon.nl>"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ConnorDillon/purescript-elasticsearch.git"
+  },
+  "main": "",
+  "keywords": [
+    "PureScript",
+    "Elastic",
+    "Search"
+  ],
+  "license": "Apache-2.0",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "output"
+  ],
+  "dependencies": {
+    "purescript-prelude": "^5.0.0",
+    "purescript-console": "^5.0.0",
+    "purescript-effect": "^3.0.0"
+  },
+  "devDependencies": {
+    "purescript-psci-support": "^5.0.0",
+    "purescript-assert": "^5.0.0"
+  }
+}

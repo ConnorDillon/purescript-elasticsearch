@@ -1,0 +1,20 @@
+{
+  "name": "purescript-elasticsearch",
+  "description": "",
+  "version": "0.1.0",
+  "homepage": "https://github.com/ConnorDillon/purescript-elasticsearch",
+  "author": "Connor Dillon <connor@cdillon.nl>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ConnorDillon/purescript-elasticsearch.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ConnorDillon/purescript-elasticsearch/issues"
+  },
+  "main": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "elasticsearch": "^16.7.2"
+  },
+  "devDependencies": {}
+}
