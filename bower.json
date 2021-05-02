@@ -22,12 +22,13 @@
     "output"
   ],
   "dependencies": {
-    "purescript-prelude": "^5.0.0",
-    "purescript-console": "^5.0.0",
-    "purescript-effect": "^3.0.0"
+    "purescript-prelude": "^4.0.0",
+    "purescript-console": "^4.0.0",
+    "purescript-effect": "^2.0.0",
+    "purescript-option": "^8.0.0"
   },
   "devDependencies": {
-    "purescript-psci-support": "^5.0.0",
-    "purescript-assert": "^5.0.0"
+    "purescript-psci-support": "^4.0.0",
+    "purescript-assert": "^4.0.0"
   }
 }
