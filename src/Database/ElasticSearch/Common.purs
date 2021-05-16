@@ -4,15 +4,16 @@ import Prelude
 
 import Control.Promise (Promise, toAffE)
 import Data.Argonaut (class EncodeJson, Json, encodeJson)
-import Data.Nullable (Nullable)
 import Database.ElasticSearch.Client (Client)
 import Effect (Effect)
 import Effect.Aff (Aff)
 import Foreign.Object as Object
 import Literals (StringLit, stringLit)
-import Option (class FromRecord)
 import Unsafe.Coerce (unsafeCoerce)
-import Untagged.Union (type (|+|), asOneOf)
+import Untagged.Castable (class Castable)
+import Untagged.Union (type (|+|), UndefinedOr, asOneOf)
+
+type Optional a = UndefinedOr a
 
 type Object = Object.Object Json
 
@@ -21,31 +22,31 @@ type Response a =
   , headers :: Object
   , meta :: Object
   , statusCode :: Int
-  , warnings :: Nullable (Array String)
+  , warnings :: Optional (Array String)
   }
 
 type RequestParams =
-  ( ignore :: Array Number
-  , maxRetries :: Number
-  )
+  { ignore :: Optional (Array Number)
+  , maxRetries :: Optional Number
+  }
 
 type CommonParams a =
-  ( pretty :: Boolean
-  , human :: Boolean
-  , error_trace :: Boolean
-  , source :: String
-  , filter_path :: Array Json
+  { pretty :: Optional Boolean
+  , human :: Optional Boolean
+  , error_trace :: Optional Boolean
+  , source :: Optional String
+  , filter_path :: Optional (Array Json)
   | a
-  )
+  }
 
-type Api a b c
-   = forall d e
-   . FromRecord d a (CommonParams b)
-  => FromRecord e () RequestParams
+type Api a b
+   = forall c d
+   . Castable (Record c) (CommonParams a)
+  => Castable (Record d) RequestParams
   => Client
+  -> Record c
   -> Record d
-  -> Record e
-  -> Aff (Response c)
+  -> Aff (Response b)
 
 type DataType =
   StringLit "boolean"
@@ -55,6 +56,8 @@ type DataType =
   |+| StringLit "ip"
   |+| StringLit "keyword"
   |+| StringLit "long"
+
+type Cast a = forall b. Castable b a => b -> a 
 
 api :: forall a b c d. (a -> b -> c -> Effect (Promise d)) -> a -> b -> c -> Aff d
 api fn x y = toAffE <<< fn x y

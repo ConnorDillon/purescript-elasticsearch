@@ -1,15 +1,16 @@
 module Database.ElasticSearch.Indices.Delete where
 
-import Database.ElasticSearch.Common (Api, api)
+import Database.ElasticSearch.Common (Api, Optional, api)
 import Database.ElasticSearch.Internal as Internal
 
-type DeleteIndexParamsOpt =
-  ( timeout :: String
-  , master_timeout :: String
-  , ignore_unavailable :: Boolean
-  , allow_no_indices :: Boolean
-  , expand_wildcards :: String -- 'open' | 'closed' | 'hidden' | 'none' | 'all'
+type DeleteIndexParams =
+  ( index :: Array String
+  , timeout :: Optional String
+  , master_timeout :: Optional String
+  , ignore_unavailable :: Optional Boolean
+  , allow_no_indices :: Optional Boolean
+  , expand_wildcards :: Optional String -- 'open' | 'closed' | 'hidden' | 'none' | 'all'
   )
 
-deleteIndex :: Api (index :: Array String) DeleteIndexParamsOpt (acknowledged :: Boolean)
+deleteIndex :: Api DeleteIndexParams (acknowledged :: Boolean)
 deleteIndex = api Internal.deleteIndex

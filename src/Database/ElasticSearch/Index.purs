@@ -1,27 +1,24 @@
 module Database.ElasticSearch.Index where
 
-import Database.ElasticSearch.Common (Api, Object, api)
+import Database.ElasticSearch.Common (Api, Object, Optional, api)
 import Database.ElasticSearch.Internal as Internal
 
-type IndexParamsReq =
+type IndexParams =
   ( index :: String
   , body :: Object
-  )
-
-type IndexParamsOpt =
-  ( id :: String
-  , type :: String
-  , waitForActiveShards :: String
-  , opType :: String -- 'index' | 'create'
-  , refresh :: String -- 'true' | 'false' | 'wait_for'
-  , routing :: String
-  , timeout :: String
-  , version :: Number
-  , versionType :: String -- 'internal' | 'external' | 'external_gte'
-  , ifSeqNo :: Number
-  , ifPrimaryTerm :: Number
-  , pipeline :: String
-  , requireAlias :: Boolean
+  , id :: Optional String
+  , type :: Optional String
+  , waitForActiveShards :: Optional String
+  , opType :: Optional String -- 'index' | 'create'
+  , refresh :: Optional String -- 'true' | 'false' | 'wait_for'
+  , routing :: Optional String
+  , timeout :: Optional String
+  , version :: Optional Number
+  , versionType :: Optional String -- 'internal' | 'external' | 'external_gte'
+  , ifSeqNo :: Optional Number
+  , ifPrimaryTerm :: Optional Number
+  , pipeline :: Optional String
+  , requireAlias :: Optional Boolean
   )
 
 type IndexResult =
@@ -39,5 +36,5 @@ type IndexResult =
   , result :: String -- 'createed' | 'updated'
   )
 
-index :: Api IndexParamsReq IndexParamsOpt IndexResult
+index :: Api IndexParams IndexResult
 index = api Internal.index

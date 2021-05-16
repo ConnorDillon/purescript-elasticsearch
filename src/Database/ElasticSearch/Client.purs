@@ -7,11 +7,12 @@ import Database.ElasticSearch.Internal (Auth, Client)
 import Database.ElasticSearch.Internal (Auth, Client, user, apiKey, apiKeyObject) as Client
 import Database.ElasticSearch.Internal as Internal
 import Effect (Effect)
-import Option (class FromRecord)
+import Untagged.Castable (class Castable)
+import Untagged.Union (UndefinedOr)
 
 client
   :: forall a
-   . FromRecord a (node :: String) (auth :: Auth)
+   . Castable (Record a) {node :: String, auth :: UndefinedOr Auth}
   => Record a
   -> Effect Client
 client = Internal.client

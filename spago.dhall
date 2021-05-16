@@ -6,8 +6,6 @@
   , "psci-support"
   , "aff-promise"
   , "argonaut"
-  , "option"
-  , "nullable"
   , "assert"
   , "untagged-union"
   , "literals"

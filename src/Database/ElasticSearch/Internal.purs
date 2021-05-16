@@ -1,13 +1,7 @@
 module Database.ElasticSearch.Internal where
 
-import Prelude
-
 import Control.Promise (Promise)
 import Effect (Effect)
-import Option (class InsertOption, Option, insert', optional, required)
-import Option as Option
-import Prim.RowList (class RowToList)
-import Unsafe.Coerce (unsafeCoerce)
 
 foreign import data Auth :: Type
 
@@ -35,15 +29,3 @@ foreign import createIndex :: ForeignApi
 foreign import deleteIndex :: ForeignApi
 
 foreign import index :: ForeignApi
-
-fromOption :: forall a. Option a -> Record a
-fromOption = unsafeCoerce
-
-fromOptionRecord
-  :: forall a b c d
-   . RowToList c d
-  => InsertOption d c a b
-  => Option.Record c a
-  -> Record b
-fromOptionRecord r = fromOption $ insert' (required r) (optional r)
-
