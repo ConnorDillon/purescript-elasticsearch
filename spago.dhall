@@ -9,6 +9,8 @@
   , "option"
   , "nullable"
   , "assert"
+  , "untagged-union"
+  , "literals"
   ]
 , packages = ./packages.dhall
 , sources = [ "src/**/*.purs", "test/**/*.purs" ]

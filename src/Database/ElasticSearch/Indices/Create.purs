@@ -1,9 +1,10 @@
 module Database.ElasticSearch.Indices.Create where
 
-import Database.ElasticSearch.Common (Api, api)
+import Database.ElasticSearch.Common (Api, DataType, api)
 import Database.ElasticSearch.Internal as Internal
 import Foreign.Object (Object)
 import Option (Option)
+import Untagged.Union (UndefinedOr)
 
 type CreateIndexParamsOpt =
   ( include_type_name :: Boolean
@@ -15,7 +16,7 @@ type CreateIndexParamsOpt =
 
 type CreateIndexBody =
   ( aliases :: Object (Option AliasParams)
-  , mappings :: {properties :: Object {type :: String}}
+  , mappings :: {properties :: Object {type :: DataType, index :: UndefinedOr Boolean}}
   , settings :: Option (number_of_shards :: Int, number_of_replicas :: Int)
   )
 

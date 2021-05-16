@@ -25,7 +25,7 @@ type IndexParamsOpt =
   )
 
 type IndexResult =
-  (_shards ::
+  ( _shards ::
       { total :: Int
       , successful :: Int
       , failed :: Int
