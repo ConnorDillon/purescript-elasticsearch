@@ -9,9 +9,3 @@ exports.createIndex = c => p => r => () => c.indices.create(p, r);
 exports.deleteIndex = c => p => r => () => c.indices.delete(p, r);
 
 exports.index = c => p => r => () => c.index(p, r);
-
-exports.apiKey = x => {apiKey: x};
-
-exports.apiKeyObject = x => {apiKey: x};
-
-exports.user = x => x;
