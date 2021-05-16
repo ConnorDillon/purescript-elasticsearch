@@ -4,10 +4,18 @@ import Prelude
 
 import Control.Promise (Promise)
 import Effect (Effect)
-import Option (class InsertOption, Option, fromRecord, insert', optional, required)
+import Option (class InsertOption, Option, insert', optional, required)
 import Option as Option
 import Prim.RowList (class RowToList)
 import Unsafe.Coerce (unsafeCoerce)
+
+foreign import data Auth :: Type
+
+foreign import apiKey :: String -> Auth
+
+foreign import apiKeyObject :: {id :: String, api_key :: String} -> Auth
+
+foreign import user :: {username :: String, password :: String} -> Auth
 
 foreign import data Client :: Type
 
