@@ -21,3 +21,13 @@ foreign import createIndex :: ForeignApi
 foreign import deleteIndex :: ForeignApi
 
 foreign import index :: ForeignApi
+
+foreign import create :: ForeignApi
+
+foreign import delete :: ForeignApi
+
+foreign import get :: ForeignApi
+
+foreign import update :: ForeignApi
+
+foreign import bulk :: ForeignApi
