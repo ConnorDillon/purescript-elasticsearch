@@ -1,5 +1,6 @@
 module Database.ElasticSearch.Client
   ( client
+  , cloudClient
   , module Client
   , apiKey
   , ApiKey

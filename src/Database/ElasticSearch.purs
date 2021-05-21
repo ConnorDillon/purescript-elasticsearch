@@ -13,7 +13,7 @@ module Database.ElasticSearch
   ) where
 
 import Database.ElasticSearch.Common (Api, Cast, CommonParams, DataType, Object, Optional, RequestParams, Response, api, boolean, date, double, geo_point, ip, keyword, long, toObject) as Common
-import Database.ElasticSearch.Client (ApiKey, Auth, Client, apiKey, client) as Client
+import Database.ElasticSearch.Client (ApiKey, Auth, Client, apiKey, client, cloudClient) as Client
 import Database.ElasticSearch.Search (DefaultOperator, ExpandWildcards, Fields, Pit, RuntimeMapping, SearchBody, SearchParamsOpt, SearchResult, SearchSource, SearchType, SuggestMode, all, always, and, closed, dfsQueryThenFetch, hidden, missing, none, open, or, pit, popular, queryThenFetch, runtimeMapping, search, searchBody) as Search
 import Database.ElasticSearch.Indices.Create (Alias, CreateIndexBody, CreateIndexParams, Mapping, Settings, alias, createIndex, createIndexBody, mapping, settings) as IndicesCreate
 import Database.ElasticSearch.Indices.Delete (DeleteIndexParams, deleteIndex) as IndicesDelete

@@ -44,9 +44,9 @@ testCreateIndexIndexSearchDeleteIndex c idx = test "createIndex/index/search/del
 testCreateUpdateGetDelete :: Client -> String -> Aff Unit
 testCreateUpdateGetDelete c idx = test "create/update/get/delete" do
   _ <- createIndex c {index: idx} {}
-  cr <- create c {index: idx, refresh: waitFor, id: id, body: source} {}
+  _ <- create c {index: idx, refresh: waitFor, id: id, body: source} {}
   gr1 <- get c {id: id, index: idx} {}
-  ur <- update c {id: id, index: idx, body: {doc: patch}, refresh: waitFor} {}
+  _ <- update c {id: id, index: idx, body: {doc: patch}, refresh: waitFor} {}
   gr2 <- get c {id: id, index: idx} {}
   dr <- delete c {id: id, index: idx, refresh: waitFor} {}
   sr <- search c {index: [idx]} {}
