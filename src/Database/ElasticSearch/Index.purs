@@ -3,7 +3,6 @@ module Database.ElasticSearch.Index where
 import Database.ElasticSearch.Common (Api, Object, Optional, api)
 import Database.ElasticSearch.Internal as Internal
 import Literals (StringLit, stringLit)
-import Prelude ((==))
 import Untagged.Union (type (|+|), asOneOf)
 
 type IndexParams =

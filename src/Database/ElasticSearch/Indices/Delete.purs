@@ -2,6 +2,7 @@ module Database.ElasticSearch.Indices.Delete where
 
 import Database.ElasticSearch.Common (Api, Optional, api)
 import Database.ElasticSearch.Internal as Internal
+import Database.ElasticSearch.Search (ExpandWildcards)
 
 type DeleteIndexParams =
   ( index :: Array String
@@ -9,7 +10,7 @@ type DeleteIndexParams =
   , master_timeout :: Optional String
   , ignore_unavailable :: Optional Boolean
   , allow_no_indices :: Optional Boolean
-  , expand_wildcards :: Optional String -- 'open' | 'closed' | 'hidden' | 'none' | 'all'
+  , expand_wildcards :: Optional ExpandWildcards
   )
 
 deleteIndex :: Api DeleteIndexParams (acknowledged :: Boolean)
