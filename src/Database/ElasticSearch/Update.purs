@@ -1,7 +1,7 @@
 module Database.ElasticSearch.Update where
 
 import Database.ElasticSearch.Common (Api, Object, Optional, api)
-import Database.ElasticSearch.Index (IndexResult)
+import Database.ElasticSearch.Index (IndexResult, Refresh)
 import Database.ElasticSearch.Internal as Internal
 import Untagged.Castable (class Castable)
 import Untagged.Union (type (|+|), asOneOf)
@@ -15,7 +15,7 @@ type UpdateParams =
   , _sourceExcludes :: Optional (Array String)
   , _sourceIncludes :: Optional (Array String)
   , lang :: Optional String
-  , refresh :: Optional String -- 'true' | 'false' | 'wait_for'
+  , refresh :: Optional Refresh
   , retryOnConflict :: Optional Number
   , routing :: Optional String
   , timeout :: Optional String

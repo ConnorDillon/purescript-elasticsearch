@@ -3,13 +3,8 @@ module Test.Main where
 import Prelude
 
 import Data.Maybe (Maybe(..))
-import Database.ElasticSearch (Client, alias, client, createIndex, createIndexBody, deleteIndex, index, long, mapping, search, searchBody, settings, toObject)
-import Database.ElasticSearch.Bulk (bulk)
+import Database.ElasticSearch (Client, alias, bulk, client, create, createIndex, createIndexBody, delete, deleteIndex, get, index, long, mapping, search, searchBody, settings, toObject, update, waitFor)
 import Database.ElasticSearch.Bulk as Bulk
-import Database.ElasticSearch.Create (create)
-import Database.ElasticSearch.Delete (delete)
-import Database.ElasticSearch.Get (get)
-import Database.ElasticSearch.Update (update)
 import Effect (Effect)
 import Effect.Aff (Aff, finally, launchAff_)
 import Effect.Class (liftEffect)
@@ -29,7 +24,7 @@ fixture fn = do
 testCreateIndexIndexSearchDeleteIndex :: Client -> String -> Aff Unit
 testCreateIndexIndexSearchDeleteIndex c idx = test "createIndex/index/search/deleteIndex" do
   cr <- createIndex c {index: idx, body: body} {}
-  ir <- index c {index: idx, refresh: "wait_for", body: toObject {"bar": 1}} {}
+  ir <- index c {index: idx, refresh: waitFor, body: toObject {"bar": 1}} {}
   sr <- search c {index: [idx], body: searchBody {size: 10, _source: true}} {}
   pure $ cr.body.acknowledged
     && ir.body.result == "created"
@@ -49,11 +44,11 @@ testCreateIndexIndexSearchDeleteIndex c idx = test "createIndex/index/search/del
 testCreateUpdateGetDelete :: Client -> String -> Aff Unit
 testCreateUpdateGetDelete c idx = test "create/update/get/delete" do
   _ <- createIndex c {index: idx} {}
-  cr <- create c {index: idx, refresh: "wait_for", id: id, body: source} {}
+  cr <- create c {index: idx, refresh: waitFor, id: id, body: source} {}
   gr1 <- get c {id: id, index: idx} {}
-  ur <- update c {id: id, index: idx, body: {doc: patch}, refresh: "wait_for"} {}
+  ur <- update c {id: id, index: idx, body: {doc: patch}, refresh: waitFor} {}
   gr2 <- get c {id: id, index: idx} {}
-  dr <- delete c {id: id, index: idx, refresh: "wait_for"} {}
+  dr <- delete c {id: id, index: idx, refresh: waitFor} {}
   sr <- search c {index: [idx]} {}
   pure $
     uorToMaybe gr1.body._source == Just source
@@ -84,7 +79,7 @@ testBulk c idx = test "bulk" do
     && uorToMaybe gr2.body._source == Just (toObject {"baz": 4})
     && sr.body.hits.total.value == 0
   where
-    runBulk x = bulk c {index: idx, body: x, refresh: "wait_for"} {}
+    runBulk x = bulk c {index: idx, body: x, refresh: waitFor} {}
 
 main :: Effect Unit
 main = launchAff_ do

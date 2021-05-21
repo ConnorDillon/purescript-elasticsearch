@@ -1,18 +1,18 @@
 module Database.ElasticSearch.Delete where
 
 import Database.ElasticSearch.Common (Api, Optional, api)
-import Database.ElasticSearch.Index (IndexResult)
+import Database.ElasticSearch.Index (IndexResult, VersionType, Refresh)
 import Database.ElasticSearch.Internal as Internal
 
 type DeleteParams =
   ( index :: String
   , id :: String
   , waitForActiveShards :: Optional String
-  , refresh :: Optional String -- 'true' | 'false' | 'wait_for'
+  , refresh :: Optional Refresh
   , routing :: Optional String
   , timeout :: Optional String
   , version :: Optional Number
-  , versionType :: Optional String -- 'internal' | 'external' | 'external_gte'
+  , versionType :: Optional VersionType
   , ifSeqNo :: Optional Number
   , ifPrimaryTerm :: Optional Number
   )

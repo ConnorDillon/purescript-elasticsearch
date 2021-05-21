@@ -1,6 +1,7 @@
 module Database.ElasticSearch.Bulk where
 
 import Database.ElasticSearch.Common (Api, Object, Optional, api)
+import Database.ElasticSearch.Index (Refresh)
 import Database.ElasticSearch.Internal as Internal
 import Untagged.Castable (class Castable, cast)
 import Untagged.Union (type (|+|), asOneOf)
@@ -12,7 +13,7 @@ type BulkParams =
   , _source :: Optional (Array String)
   , _sourceExcludes :: Optional (Array String)
   , _sourceIncludes :: Optional (Array String)
-  , refresh :: Optional String -- 'true' | 'false' | 'wait_for'
+  , refresh :: Optional Refresh
   , routing :: Optional String
   , timeout :: Optional String
   , requireAlias :: Optional Boolean

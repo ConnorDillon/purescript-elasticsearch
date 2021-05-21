@@ -1,6 +1,7 @@
 module Database.ElasticSearch.Get where
 
 import Database.ElasticSearch.Common (Api, Optional, Object, api)
+import Database.ElasticSearch.Index (VersionType)
 import Database.ElasticSearch.Internal as Internal
 
 type GetParams =
@@ -15,7 +16,7 @@ type GetParams =
   , _source_excludes :: Optional (Array String)
   , _source_includes :: Optional (Array String)
   , version :: Optional Number
-  , version_type :: Optional String -- 'internal' | 'external' | 'external_gte' | 'force'
+  , version_type :: Optional VersionType
   )
 
 type GetResult =
