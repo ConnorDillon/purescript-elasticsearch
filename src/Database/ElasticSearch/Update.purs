@@ -1,8 +1,10 @@
 module Database.ElasticSearch.Update where
 
-import Database.ElasticSearch.Common (Api, Object, Optional, api)
+import Data.Argonaut (Json)
+import Database.ElasticSearch.Common (Api, Optional, api)
 import Database.ElasticSearch.Index (IndexResult, Refresh)
 import Database.ElasticSearch.Internal as Internal
+import Foreign.Object (Object)
 import Untagged.Castable (class Castable)
 import Untagged.Union (type (|+|), asOneOf)
 
@@ -24,11 +26,11 @@ type UpdateParams =
   , requireAlias :: Optional Boolean
   )
 
-type Script = String |+| {source :: String, lang :: String, params :: Object}
+type Script = String |+| {source :: String, lang :: String, params :: Object Json}
 
-type UpdateBody = {doc :: Object} |+| {script :: Script}
+type UpdateBody = {doc :: Object Json} |+| {script :: Script}
 
-doc :: Object -> UpdateBody
+doc :: Object Json -> UpdateBody
 doc x = asOneOf {doc: x}
 
 script :: forall a. Castable a Script => a -> UpdateBody

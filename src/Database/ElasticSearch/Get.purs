@@ -1,8 +1,10 @@
 module Database.ElasticSearch.Get where
 
-import Database.ElasticSearch.Common (Api, Optional, Object, api)
+import Data.Argonaut (Json)
+import Database.ElasticSearch.Common (Api, Optional, api)
 import Database.ElasticSearch.Index (VersionType)
 import Database.ElasticSearch.Internal as Internal
+import Foreign.Object (Object)
 
 type GetParams =
   ( id :: String
@@ -28,8 +30,8 @@ type GetResult =
   , _primary_term :: Int
   , found :: Boolean
   , _routing :: Optional String
-  , _source :: Optional Object
-  , _fields :: Optional Object
+  , _source :: Optional (Object Json)
+  , _fields :: Optional (Object Json)
   )
 
 get :: Api GetParams GetResult

@@ -1,8 +1,10 @@
 module Database.ElasticSearch.Bulk where
 
-import Database.ElasticSearch.Common (Api, Object, Optional, api)
+import Data.Argonaut (Json)
+import Database.ElasticSearch.Common (Api, Optional, api)
 import Database.ElasticSearch.Index (Refresh)
 import Database.ElasticSearch.Internal as Internal
+import Foreign.Object (Object)
 import Untagged.Castable (class Castable, cast)
 import Untagged.Union (type (|+|), asOneOf)
 
@@ -22,34 +24,34 @@ type BulkParams =
 
 type BulkBody = Array Action
 
-type DeleteParams =
+type BulkDeleteParams =
   { _id :: String
   , _index :: Optional String
   , require_alias :: Optional Boolean
   }
 
-type IndexParams =
+type BulkIndexParams =
   { _index :: Optional String
   , _id :: Optional String
   , require_alias :: Optional Boolean
-  , dynamic_templates :: Optional Object
+  , dynamic_templates :: Optional (Object Json)
   }
 
-type CreateParams = IndexParams
+type BulkCreateParams = BulkIndexParams
 
-type UpdateParams =
+type BulkUpdateParams =
   { _id :: String
   , _index :: Optional String
   , require_alias :: Optional Boolean
   }
 
 type Action =
-  {create :: CreateParams}
-  |+| {delete :: DeleteParams}
-  |+| {index :: IndexParams}
-  |+| {update :: UpdateParams}
-  |+| {doc :: Object}
-  |+| Object
+  {create :: BulkCreateParams}
+  |+| {delete :: BulkDeleteParams}
+  |+| {index :: BulkIndexParams}
+  |+| {update :: BulkUpdateParams}
+  |+| {doc :: Object Json}
+  |+| Object Json
 
 type BulkResult =
   ( took :: Int
@@ -81,17 +83,17 @@ type Error =
   , index :: String
   }
 
-create :: forall a. Castable a CreateParams => a -> Object -> BulkBody  
-create x y = [asOneOf {create: cast x :: CreateParams}, asOneOf y]
+bulkCreate :: forall a. Castable a BulkCreateParams => a -> Object Json -> BulkBody  
+bulkCreate x y = [asOneOf {create: cast x :: BulkCreateParams}, asOneOf y]
 
-index :: forall a. Castable a IndexParams => a -> Object -> BulkBody  
-index x y = [asOneOf {index: cast x :: IndexParams}, asOneOf y]
+bulkIndex :: forall a. Castable a BulkIndexParams => a -> Object Json -> BulkBody  
+bulkIndex x y = [asOneOf {index: cast x :: BulkIndexParams}, asOneOf y]
 
-delete :: forall a. Castable a DeleteParams => a -> BulkBody  
-delete x = [asOneOf {delete: cast x :: DeleteParams}]
+bulkDelete :: forall a. Castable a BulkDeleteParams => a -> BulkBody  
+bulkDelete x = [asOneOf {delete: cast x :: BulkDeleteParams}]
 
-update :: forall a. Castable a UpdateParams => a -> Object -> BulkBody  
-update x y = [asOneOf {update: cast x :: UpdateParams}, asOneOf {doc: y}]
+bulkUpdate :: forall a. Castable a BulkUpdateParams => a -> Object Json -> BulkBody  
+bulkUpdate x y = [asOneOf {update: cast x :: BulkUpdateParams}, asOneOf {doc: y}]
 
 bulk :: Api BulkParams BulkResult
 bulk = api Internal.bulk

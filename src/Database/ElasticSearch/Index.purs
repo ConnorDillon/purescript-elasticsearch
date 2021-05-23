@@ -1,13 +1,15 @@
 module Database.ElasticSearch.Index where
 
-import Database.ElasticSearch.Common (Api, Object, Optional, api)
+import Data.Argonaut (Json)
+import Database.ElasticSearch.Common (Api, Optional, api)
 import Database.ElasticSearch.Internal as Internal
+import Foreign.Object (Object)
 import Literals (StringLit, stringLit)
 import Untagged.Union (type (|+|), asOneOf)
 
 type IndexParams =
   ( index :: String
-  , body :: Object
+  , body :: Object Json
   , id :: Optional String
   , type :: Optional String
   , waitForActiveShards :: Optional String

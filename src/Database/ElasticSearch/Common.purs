@@ -7,7 +7,7 @@ import Data.Argonaut (class EncodeJson, Json, encodeJson)
 import Database.ElasticSearch.Client (Client)
 import Effect (Effect)
 import Effect.Aff (Aff)
-import Foreign.Object as Object
+import Foreign.Object (Object)
 import Literals (StringLit, stringLit)
 import Unsafe.Coerce (unsafeCoerce)
 import Untagged.Castable (class Castable)
@@ -15,12 +15,10 @@ import Untagged.Union (type (|+|), UndefinedOr, asOneOf)
 
 type Optional a = UndefinedOr a
 
-type Object = Object.Object Json
-
 type Response a =
   { body :: Record a
-  , headers :: Object
-  , meta :: Object
+  , headers :: Object Json
+  , meta :: Object Json
   , statusCode :: Int
   , warnings :: Optional (Array String)
   }
@@ -62,7 +60,7 @@ type Cast a = forall b. Castable b a => b -> a
 api :: forall a b c d. (a -> b -> c -> Effect (Promise d)) -> a -> b -> c -> Aff d
 api fn x y = toAffE <<< fn x y
 
-toObject :: forall a. EncodeJson (Record a) => Record a -> Object
+toObject :: forall a. EncodeJson (Record a) => Record a -> Object Json
 toObject = unsafeCoerce <<< encodeJson
 
 boolean :: DataType
