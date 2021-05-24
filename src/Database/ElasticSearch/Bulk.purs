@@ -1,7 +1,7 @@
 module Database.ElasticSearch.Bulk where
 
-import Data.Argonaut (Json)
-import Database.ElasticSearch.Common (Api, Optional, api)
+import Data.Argonaut (class EncodeJson, Json)
+import Database.ElasticSearch.Common (Api, Optional, api, toObject)
 import Database.ElasticSearch.Index (Refresh)
 import Database.ElasticSearch.Internal as Internal
 import Foreign.Object (Object)
@@ -83,17 +83,35 @@ type Error =
   , index :: String
   }
 
-bulkCreate :: forall a. Castable a BulkCreateParams => a -> Object Json -> BulkBody  
-bulkCreate x y = [asOneOf {create: cast x :: BulkCreateParams}, asOneOf y]
+bulkCreate
+  :: forall a b
+   . Castable a BulkCreateParams
+  => EncodeJson (Record b)
+  => a
+  -> Record b
+  -> BulkBody  
+bulkCreate x y = [asOneOf {create: cast x :: BulkCreateParams}, asOneOf (toObject y)]
 
-bulkIndex :: forall a. Castable a BulkIndexParams => a -> Object Json -> BulkBody  
-bulkIndex x y = [asOneOf {index: cast x :: BulkIndexParams}, asOneOf y]
+bulkIndex
+  :: forall a b
+   . Castable a BulkIndexParams
+  => EncodeJson (Record b)
+  => a
+  -> Record b
+  -> BulkBody  
+bulkIndex x y = [asOneOf {index: cast x :: BulkIndexParams}, asOneOf (toObject y)]
 
 bulkDelete :: forall a. Castable a BulkDeleteParams => a -> BulkBody  
 bulkDelete x = [asOneOf {delete: cast x :: BulkDeleteParams}]
 
-bulkUpdate :: forall a. Castable a BulkUpdateParams => a -> Object Json -> BulkBody  
-bulkUpdate x y = [asOneOf {update: cast x :: BulkUpdateParams}, asOneOf {doc: y}]
+bulkUpdate
+  :: forall a b
+   . Castable a BulkUpdateParams
+  => EncodeJson (Record b)
+  => a
+  -> Record b
+  -> BulkBody  
+bulkUpdate x y = [asOneOf {update: cast x :: BulkUpdateParams}, asOneOf {doc: (toObject y)}]
 
 bulk :: Api BulkParams BulkResult
 bulk = api Internal.bulk

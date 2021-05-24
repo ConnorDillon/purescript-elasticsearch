@@ -1,7 +1,7 @@
 module Database.ElasticSearch.Update where
 
-import Data.Argonaut (Json)
-import Database.ElasticSearch.Common (Api, Optional, api)
+import Data.Argonaut (class EncodeJson, Json)
+import Database.ElasticSearch.Common (Api, Optional, api, toObject)
 import Database.ElasticSearch.Index (IndexResult, Refresh)
 import Database.ElasticSearch.Internal as Internal
 import Foreign.Object (Object)
@@ -30,8 +30,8 @@ type Script = String |+| {source :: String, lang :: String, params :: Object Jso
 
 type UpdateBody = {doc :: Object Json} |+| {script :: Script}
 
-doc :: Object Json -> UpdateBody
-doc x = asOneOf {doc: x}
+doc :: forall a. EncodeJson (Record a) => Record a -> UpdateBody
+doc x = asOneOf {doc: (toObject x)}
 
 script :: forall a. Castable a Script => a -> UpdateBody
 script x = asOneOf {script: asOneOf x :: Script}

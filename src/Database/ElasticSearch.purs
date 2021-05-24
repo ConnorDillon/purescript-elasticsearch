@@ -16,7 +16,7 @@ module Database.ElasticSearch
 import Database.ElasticSearch.Common (Api, CommonParams, DataType, Optional, RequestParams, Response, boolean, date, double, geo_point, ip, keyword, long, toObject) as Common
 import Database.ElasticSearch.Client (ApiKey, Auth, Client, apiKey, client, cloudClient) as Client
 import Database.ElasticSearch.Search (ExpandWildcards, Fields, Pit, RuntimeMapping, SearchBody, SearchParamsOpt, SearchResult, SearchSource, SearchType, SuggestMode, all, always, closed, dfsQueryThenFetch, hidden, missing, none, open, pit, popular, queryThenFetch, runtimeMapping, search, searchBody) as Search
-import Database.ElasticSearch.Indices.Create (Alias, CreateIndexBody, CreateIndexParams, Mapping, Settings, alias, createIndex, createIndexBody, mapping, settings) as IndicesCreate
+import Database.ElasticSearch.Indices.Create (Alias, CreateIndexBody, CreateIndexParams, Mapping, Settings, alias, aliases, createIndex, createIndexBody, mapping, mappings, settings) as IndicesCreate
 import Database.ElasticSearch.Indices.Delete (DeleteIndexParams, deleteIndex) as IndicesDelete
 import Database.ElasticSearch.Index (IndexParams, IndexResult, OpType, Refresh, VersionType, createOp, external, externalGte, index, indexOp, internal, refreshFalse, refreshTrue, waitFor) as Index
 import Database.ElasticSearch.Create (CreateParams, create) as Create
