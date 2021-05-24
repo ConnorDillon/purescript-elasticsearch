@@ -3,12 +3,11 @@ module Database.ElasticSearch.Search where
 import Data.Argonaut (Json)
 import Database.ElasticSearch.Common (Api, DataType, Optional, Cast, api)
 import Database.ElasticSearch.Internal as Internal
+import Database.ElasticSearch.Query (Operator, Query)
 import Foreign.Object (Object)
 import Literals (StringLit, stringLit)
 import Untagged.Castable (cast)
 import Untagged.Union (type (|+|), UndefinedOr, asOneOf)
-
-type DefaultOperator = StringLit "AND" |+| StringLit "OR"
 
 type ExpandWildcards =
   StringLit "open"
@@ -27,7 +26,7 @@ type SearchParamsOpt =
   , analyzer :: Optional String
   , analyze_wildcard :: Optional Boolean
   , ccs_minimize_roundtrips :: Optional Boolean
-  , default_operator :: Optional DefaultOperator
+  , default_operator :: Optional Operator
   , df :: Optional String
   , explain :: Optional Boolean
   , stored_fields :: Optional (Array String)
@@ -86,7 +85,7 @@ type SearchBody =
   , indices_boost :: Optional (Array (Object Number))
   , min_score :: Optional Number
   , pit :: Optional Pit
-  , query :: Optional (Object Json)
+  , query :: Optional Query
   , runtime_mappings :: Optional (Object RuntimeMapping)
   , seq_no_primary_term :: Optional Boolean
   , size :: Optional Int
@@ -135,12 +134,6 @@ searchBody = cast
 
 search :: Api SearchParamsOpt SearchResult
 search = api Internal.search
-
-and :: DefaultOperator
-and = asOneOf (stringLit :: _ "AND")
-
-or :: DefaultOperator
-or = asOneOf (stringLit :: _ "OR")
 
 missing :: SuggestMode
 missing = asOneOf (stringLit :: _ "missing")

@@ -3,8 +3,8 @@ module Test.Main where
 import Prelude
 
 import Data.Maybe (Maybe(..))
-import Database.ElasticSearch (Client, alias, bulk, client, create, createIndex, createIndexBody, delete, deleteIndex, get, index, long, mapping, search, searchBody, settings, toObject, update, waitFor)
-import Database.ElasticSearch.Bulk as Bulk
+import Database.ElasticSearch (Client, alias, bulk, bulkCreate, bulkDelete, bulkIndex, bulkUpdate, client, create, createIndex, createIndexBody, delete, deleteIndex, get, index, long, mapping, search, searchBody, settings, toObject, update, waitFor)
+import Database.ElasticSearch.Query (bool, match, matches)
 import Effect (Effect)
 import Effect.Aff (Aff, finally, launchAff_)
 import Effect.Class (liftEffect)
@@ -63,13 +63,13 @@ testCreateUpdateGetDelete c idx = test "create/update/get/delete" do
 testBulk :: Client -> String -> Aff Unit
 testBulk c idx = test "bulk" do
   _ <- createIndex c {index: idx} {}
-  br1 <- runBulk $ Bulk.create {_id: "foo1"} (toObject {"bar": 1})
-                    <> Bulk.index {_id: "foo2"} (toObject {"baz": 2})
-  br2 <- runBulk $ Bulk.update {_id: "foo1"} (toObject {"bar": 3})
-                    <> Bulk.update {_id: "foo2"} (toObject {"baz": 4})
+  br1 <- runBulk $ bulkCreate {_id: "foo1"} (toObject {"bar": 1})
+                    <> bulkIndex {_id: "foo2"} (toObject {"baz": 2})
+  br2 <- runBulk $ bulkUpdate {_id: "foo1"} (toObject {"bar": 3})
+                    <> bulkUpdate {_id: "foo2"} (toObject {"baz": 4})
   gr1 <- get c {id: "foo1", index: idx} {}
   gr2 <- get c {id: "foo2", index: idx} {}
-  br3 <- runBulk $ Bulk.delete {_id: "foo1"} <> Bulk.delete {_id: "foo2"}
+  br3 <- runBulk $ bulkDelete {_id: "foo1"} <> bulkDelete {_id: "foo2"}
   sr <- search c {index: [idx]} {}
   pure $
     not br1.body.errors
@@ -81,9 +81,21 @@ testBulk c idx = test "bulk" do
   where
     runBulk x = bulk c {index: idx, body: x, refresh: waitFor} {}
 
+testQuery :: Client -> String -> Aff Unit
+testQuery c idx = test "query" do
+  _ <- createIndex c {index: idx} {}
+  _ <- index c {index: idx, refresh: waitFor, body: toObject {"bar": 1}} {}
+  _ <- index c {index: idx, refresh: waitFor, body: toObject {"baz": 1}} {}
+  _ <- index c {index: idx, refresh: waitFor, body: toObject {"quux": 1}} {}
+  sr <- search c {index: [idx], body: searchBody {query: q}} {}
+  pure $ sr.body.hits.total.value == 2
+  where
+    q = bool {must: [bool {must_not: [matches {bar: match {query: 1.0}}]}]}
+
 main :: Effect Unit
 main = launchAff_ do
   fixture testCreateIndexIndexSearchDeleteIndex
   fixture testCreateUpdateGetDelete
   fixture testBulk
+  fixture testQuery
   liftEffect $ log "[DONE]"
