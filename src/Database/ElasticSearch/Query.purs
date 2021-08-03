@@ -14,6 +14,7 @@ newtype Query = Query
   |+| {bool :: Bool}
   |+| {boosting :: Boosting}
   |+| {dis_max :: DisMax}
+  |+| {prefix :: Object Prefix}
   )
 
 type Match =
@@ -68,6 +69,12 @@ type DisMax =
   , tie_breaker :: Optional Number
   }
 
+type Prefix =
+  { value :: String
+  , rewrite :: Optional String
+  , case_insensitive :: Optional Boolean
+  }
+
 type Operator = StringLit "AND" |+| StringLit "OR"
 
 type ZeroTermsQuery = StringLit "all" |+| StringLit "none"
@@ -91,6 +98,12 @@ terms x = Query (asOneOf {term: fromHomogeneous x :: Object Term})
   
 term :: Cast Term
 term = cast
+
+prefixes :: forall a. Homogeneous a Prefix => Record a -> Query
+prefixes x = Query (asOneOf {prefix: fromHomogeneous x :: Object Prefix})
+  
+prefix :: Cast Prefix
+prefix = cast
 
 bool :: forall a. Castable a Bool => a -> Query
 bool x = Query (asOneOf {bool: cast x :: Bool})
