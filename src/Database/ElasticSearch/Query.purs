@@ -30,6 +30,7 @@ type Match =
   , operator :: Optional Operator
   , minimum_should_match :: Optional String
   , zero_terms_query :: Optional ZeroTermsQuery
+  , boost :: Optional Number
   }
   
 type Term =
@@ -73,6 +74,7 @@ type Prefix =
   { value :: String
   , rewrite :: Optional String
   , case_insensitive :: Optional Boolean
+  , boost :: Optional Number
   }
 
 type Operator = StringLit "AND" |+| StringLit "OR"
